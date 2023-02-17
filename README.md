@@ -14,4 +14,6 @@ a user can change password-username in setting.
 
 login with token Authentication.
 
+by swagger can view endpoints
+
 update project soon ....
