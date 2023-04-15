@@ -14,16 +14,26 @@ class WishViewSet(viewsets.ModelViewSet):
         return self.request.user.wishes.all()
 
     def retrieve(self, request, *args, **kwargs):
+        """
+            in this section, you can see 1 wish
+        """
         wish = get_object_or_404(self.get_queryset(), pk=kwargs['pk'])
         ser_data = self.serializer_class(instance=wish)
         return Response(ser_data.data, status=status.HTTP_200_OK)
 
     def list(self, request, *args, **kwargs):
+        """
+            in this section, user can see his all wishes
+        """
+
         wish_list = get_list_or_404(self.get_queryset())
         ser_data = self.serializer_class(instance=wish_list, many=True)
         return Response(ser_data.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
+        """
+            in this section, user can create wish
+        """
         ser_data = self.serializer_class(data=request.data, context=request.user)
         if ser_data.is_valid():
             ser_data.create(ser_data.validated_data)
@@ -31,6 +41,9 @@ class WishViewSet(viewsets.ModelViewSet):
         return Response(ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def partial_update(self, request, *args, **kwargs):
+        """
+                in this section, user can update 1 wish
+        """
         slug = request.get_full_path().split('/')
         wish = get_object_or_404(self.get_queryset(), slug=slug[-2])
         ser_data = self.serializer_class(instance=wish, data=request.POST, partial=True)
@@ -40,6 +53,9 @@ class WishViewSet(viewsets.ModelViewSet):
         return Response(ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
+        """
+            in this section, user can delete 1 wish
+        """
         slug = request.get_full_path().split('/')
         wish = get_object_or_404(self.get_queryset(), user=request.user, slug=slug[-2])
         wish.delete()

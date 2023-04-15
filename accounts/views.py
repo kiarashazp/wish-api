@@ -14,16 +14,25 @@ from .serializers import (UserRegisterSerializer, ChangePasswordSerializer,
 
 
 class UserRegister(APIView):
+    """
+        In this section, the user can register by entering his desired email username and password.
+    """
+    serializer_class = UserRegisterSerializer
+
     def post(self, request):
-        ser_data = UserRegisterSerializer(data=request.POST)
+        ser_data = self.serializer_class(data=request.POST)
         if ser_data.is_valid():
             ser_data.create(ser_data.validated_data)
             return Response(ser_data.data, status=status.HTTP_201_CREATED)
         return Response(ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ChangeUsername(UpdateAPIView):
+class ChangeUsername(APIView):
+    """
+        In this section, if the user is logged in, he can change his username
+    """
     permission_classes = (IsAuthenticated,)
+    serializer_class = ChangeUsernameSerializer
 
     def get_object(self, queryset=None):
         obj = self.request.user
@@ -31,7 +40,7 @@ class ChangeUsername(UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         user = self.get_object()
-        ser_data = ChangeUsernameSerializer(data=request.POST, instance=user)
+        ser_data = self.serializer_class(data=request.POST, instance=user)
         if ser_data.is_valid():
             ser_data.update(user, ser_data.validated_data)
             return Response(ser_data.data, status=status.HTTP_202_ACCEPTED)
@@ -39,6 +48,11 @@ class ChangeUsername(UpdateAPIView):
 
 
 class ForgotPassword(APIView):
+    """
+        In this section, if the user has forgotten the password,
+        enter the email and enter the password from the link sent to you
+    """
+
     def post(self, request):
         email = request.data['email']
         if email is None:
@@ -63,10 +77,16 @@ class ForgotPassword(APIView):
 
 
 class ResetPassword(APIView):
+    """
+        In this section, The user enters his new password and
+        if the requirements of the new password are correct for the account, he can login
+    """
+    serializer_class = UserResetPasswordSerializer
+
     def put(self, request):
         user = User.objects.get(id=request.session['user_id'])
-        ser_data = UserResetPasswordSerializer(data=request.POST,
-                                               context={'token': request.session['token']})
+        ser_data = self.serializer_class(data=request.POST,
+                                         context={'token': request.session['token']})
 
         ser_data.is_valid(raise_exception=True)
         ser_data.update(user, ser_data.validated_data)
@@ -76,6 +96,9 @@ class ResetPassword(APIView):
 
 
 class ChangePassword(UpdateAPIView):
+    """
+        In this section, the user can change password in setting profile
+    """
     permission_classes = (IsAuthenticated,)
 
     def get_object(self, queryset=None):
@@ -92,6 +115,9 @@ class ChangePassword(UpdateAPIView):
 
 
 class UserProfile(APIView):
+    """
+        In this section, user seen his profile
+    """
     permission_classes = [IsAuthenticated, ]
 
     def get(self, request):
@@ -104,6 +130,9 @@ class UserProfile(APIView):
 
 
 class UserLogout(APIView):
+    """
+        In this section, user logout the system
+    """
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):

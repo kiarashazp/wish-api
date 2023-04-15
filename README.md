@@ -6,7 +6,7 @@ a user can login-logout-register to app.
 
 The user can reset his password when he forgot the password during login.
 
-When the forgotten password is called and the email is given, an email is sent to the user with Google SMTP and the user must enter the number sent to be able to change the password.
+When the forgotten password is called, and the email is given, an email is sent to the user with Google SMTP and the user must enter the number sent to be able to change the password.
 
 a user can create-Read-delete-update on wish.
 
@@ -16,4 +16,4 @@ login with token Authentication.
 
 by swagger can view endpoints
 
-update project soon ....
+test for some urls and some views
